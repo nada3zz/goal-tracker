@@ -1,0 +1,21 @@
+
+export const ErrorMessagesMapping = {
+  USER_ALREADY_EXISTS: 'User already exists',
+  TOKEN_NOT_FOUND: 'Token not found',
+  INVALID_CREDENTIALS: 'Your credentials are not valid',
+  PASSWORDS_DO_NOT_MATCH: 'Passwords do not match',
+  PASSWORD_RESET_SUCCESS: 'Password has been reset successfully',
+  USER_NOT_FOUND: 'User not found',
+  LOGIN_SUCCESS: 'You have been logged in successfully',
+  REFRESH_TOKEN_NOT_FOUND: 'Refresh token not found',
+  LOGOUT_SUCCESS: 'You have been logged out successfully',
+  REGISTRATION_SUCCESS: 'You have been registered successfully',
+  NO_DATA_FOUND: 'No data found',
+  INVALID_REQUEST: 'Invalid request',
+  UNAUTHORIZED_ACTION: 'You are not authorized to perform this action',
+  FORBIDDEN_MESSAGE: "You are not allowed to access this resource",
+  GOAL_NOT_FOUND: "Goal not found",
+  GOAL_ALREADY_EXISTS: "Resource already exists",
+  GOAL_ID_REQUIRED: "Goal id is required",
+  USER_ID_REQUIRED: "User id is required",
+};
