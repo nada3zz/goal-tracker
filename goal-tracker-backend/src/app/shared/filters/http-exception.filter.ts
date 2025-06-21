@@ -10,27 +10,39 @@ import { ConfigService } from '@nestjs/config';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
-  private readonly env: string;
+  private readonly isDevelopment: boolean;
 
   constructor(private readonly configService: ConfigService) {
-    this.env = this.configService.get<string>('NODE_ENV') || 'production';
+    this.isDevelopment =
+      this.configService.get<string>('NODE_ENV') === 'development';
   }
 
   catch(exception: HttpException, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus();
+    const exceptionResponse = exception.getResponse();
 
-    const isDevelopment = this.env === 'development';
-    const message =
-      status === HttpStatus.INTERNAL_SERVER_ERROR
-        ? 'Internal server error'
-        : 'An error occurred';
-    const devMessage= exception.getResponse()
-    response.status(status).json({
+    const errorResponse: Record<string, any> = {
       statusCode: status,
-      type: isDevelopment ? exception.name : undefined,
-      ...( isDevelopment ? { devMessage, stack: exception.stack } : { message: message})
-    });
+    };
+
+    if (this.isDevelopment) {
+      errorResponse.type = exception.name;
+      errorResponse.message =
+        typeof exceptionResponse === 'string'
+          ? exceptionResponse
+          : (exceptionResponse as any)?.message || 'An error occurred';
+      errorResponse.stack = exception.stack;
+    } else {
+      errorResponse.message =
+        status === HttpStatus.INTERNAL_SERVER_ERROR
+          ? 'Internal server error'
+          : typeof exceptionResponse === 'string'
+            ? exceptionResponse
+            : (exceptionResponse as any)?.message || 'An error occurred';
+    }
+
+    response.status(status).json(errorResponse);
   }
 }
